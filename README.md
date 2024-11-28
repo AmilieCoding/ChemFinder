@@ -2,8 +2,6 @@
 This tool identifies against the PubChem Database in order to check for properties of chemicals.<br>
 <br>
 
-
-# How to use: 
 ## Using main.class from source
 - Open IntelliJ and create a new MAVEN PROJECT.<br>
 - Copy the code from main.java into your main.java of your project.<br>
