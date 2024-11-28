@@ -2,9 +2,9 @@
 This tool identifies against the PubChem Database in order to check for properties of chemicals.<br>
 <br>
 ## Project Plans
-Implment a GUI<br>
-Sort data better<br>
-Increase readability<br>
+:x: Implment a GUI<br>
+:x: Sort data better<br>
+:x: Increase readability<br>
 <br>
 ## Using main.class from source
 Open IntelliJ and create a new MAVEN PROJECT.<br>
