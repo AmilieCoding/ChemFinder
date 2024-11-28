@@ -1,6 +1,8 @@
 # PubChem ChemFinder
 This tool identifies against the PubChem Database in order to check for properties of chemicals.<br>
 <br>
+Tool tested on macOS Sequoia 15.1.1<br>
+<br>
 ## Project Plans
 :x: Implement a GUI<br>
 :x: Sort data better<br>
