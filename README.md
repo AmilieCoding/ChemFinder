@@ -2,7 +2,7 @@
 This tool identifies against the PubChem Database in order to check for properties of chemicals.<br>
 <br>
 ## Project Plans
-:x: Implment a GUI<br>
+:x: Implement a GUI<br>
 :x: Sort data better<br>
 :x: Increase readability<br>
 <br>
