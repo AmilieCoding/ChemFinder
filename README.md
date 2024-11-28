@@ -1,15 +1,11 @@
 # PubChem ChemFinder
 This tool identifies against the PubChem Database in order to check for properties of chemicals.<br>
 <br>
-Tool tested on macOS Sequoia 15.1.1<br>
-## Project Plans
-:x: Implement a GUI<br>
-:x: Sort data better<br>
-:x: Increase readability<br>
+
 ## Using main.class from source
-Open IntelliJ and create a new MAVEN PROJECT.<br>
-Copy the code from main.java into your main.java of your project.<br>
-In your pom.xml add the following<br>
+- Open IntelliJ and create a new MAVEN PROJECT.<br>
+- Copy the code from main.java into your main.java of your project.<br>
+- In your pom.xml add the following<br>
 ```    
     <dependencies>
         <dependency>
@@ -19,3 +15,9 @@ In your pom.xml add the following<br>
         </dependency>
     </dependencies>
 ```
+
+## Project Plans
+:x: Implement a GUI<br>
+:x: Sort data better<br>
+:x: Increase readability<br>
+<br>
