@@ -16,4 +16,5 @@ In your pom.xml add the following<br>
             <artifactId>gson</artifactId>
             <version>2.11.0</version>
         </dependency>
-    </dependencies>```
+    </dependencies>```<br>
+Enjoy!
