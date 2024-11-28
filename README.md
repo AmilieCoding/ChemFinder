@@ -10,10 +10,12 @@ This tool identifies against the PubChem Database in order to check for properti
 Open IntelliJ and create a new MAVEN PROJECT.<br>
 Copy the code from main.java into your main.java of your project.<br>
 In your pom.xml add the following<br>
-```    <dependencies>
+```    
+    <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.11.0</version>
         </dependency>
     </dependencies>
+```
