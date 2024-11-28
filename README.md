@@ -17,5 +17,3 @@ In your pom.xml add the following<br>
             <version>2.11.0</version>
         </dependency>
     </dependencies>
-```<br>
-Enjoy!
