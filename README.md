@@ -22,3 +22,8 @@ This is a JAVA 21 project, if you are using it you MUST have Java 21 installed, 
 :x: Sort data better<br>
 :x: Increase readability<br>
 <br>
+## Release b1.1 Patch Notes
+- Updated Java version from JAVA 23 to JAVA 21 to increase compatibility on linux systems.
+- Added debug messaging, ignore all messages with [DEBUG] unless you run into issues.
+- If you run into issues, please contact me in discord.gg/arch-linux
+
