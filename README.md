@@ -17,7 +17,7 @@ This is a JAVA 21 project, if you are using it you MUST have Java 21 installed, 
     </dependencies>
 ```
 
-## Project Plans
+## Long Term Goals
 :x: Implement a GUI<br>
 :x: Sort data better<br>
 :x: Increase readability<br>
