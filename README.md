@@ -8,7 +8,7 @@ Increase readability<br>
 <br>
 ## Using main.class from source
 Open IntelliJ and create a new MAVEN PROJECT.<br>
-Copy the code from main.class into your main.class of your project.<br>
+Copy the code from main.java into your main.java of your project.<br>
 In your pom.xml add the following<br>
 ```    <dependencies>
         <dependency>
