@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter the item from PubChem (Compound) you want to find: ");
+            System.out.print("[NOTIFICATION] Enter your query: ");
             String userInput = scanner.nextLine();
             scanner.close();
 
@@ -19,12 +19,15 @@ public class Main {
             String compoundName = addHyphens(compoundNamePreHyphen);
             String urlString = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + compoundName + "/JSON";
 
+            System.out.println("[DEBUG] Sending out request.");
+
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
             int responseCode = conn.getResponseCode();
             if (responseCode == 200) {
+                System.out.println("[DEBUG] Code 200! JSON Found!");
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String inputLine;
                 StringBuilder response = new StringBuilder();
@@ -33,10 +36,11 @@ public class Main {
                 }
                 in.close();
 
-                System.out.println("Response from PubChem API:");
+                System.out.println("[NOTIFICATION] Response from PubChem API:");
                 System.out.println(response.toString());
 
                 JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
+                System.out.println("[DEBUG] Parsing and sorting JSON.");
 
                 System.out.println("CID: " + jsonObject.getAsJsonArray("PC_Compounds")
                         .get(0).getAsJsonObject().get("id"));
