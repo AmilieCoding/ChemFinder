@@ -21,6 +21,7 @@ This is a JAVA 21 project, if you are using it you MUST have Java 21 installed, 
 :x: Implement a GUI<br>
 :x: Sort data better<br>
 :x: Increase readability<br>
+:x: Improve error handling<br>
 <br>
 ## Release b1.1 Patch Notes
 - Updated Java version from JAVA 23 to JAVA 21 to increase compatibility on linux systems.
