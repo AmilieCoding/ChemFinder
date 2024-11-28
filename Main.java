@@ -28,6 +28,7 @@ public class Main {
         System.out.println("[DEBUG] Sending out request.");
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
         conn.setRequestMethod("GET");
         int responseCode = conn.getResponseCode();
         if (responseCode == 200) {
