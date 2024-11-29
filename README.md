@@ -23,7 +23,7 @@ This is a JAVA 21 project, if you are using it you MUST have Java 21 installed, 
 ✔️ Increase readability<br>
 ✔️ Improve error handling<br>
 <br>
-## Release b1.1 Patch Notes
+## Release 1.0 Patch Notes
 - Added rate limit handling.
 - Increased debug message prevalence.
 - If you run into issues, please contact me in discord.gg/arch-linux
