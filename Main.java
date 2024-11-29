@@ -135,13 +135,11 @@ public class Main {
 
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JTextField userInputField = new JTextField(20);  
-        userInputField.setPreferredSize(new Dimension(200, 30)); 
+        JTextField userInputField = new JTextField(20);
+        userInputField.setPreferredSize(new Dimension(200, 30));
         inputPanel.add(userInputField);
-
         gui.add(inputPanel, BorderLayout.CENTER);
 
-        // Set up a submit button and add action listener
         JButton submitUserInput = new JButton("Search");
         submitUserInput.addActionListener(e -> {
             String userInput = userInputField.getText();
@@ -152,12 +150,11 @@ public class Main {
             }
         });
 
-        // Add the button below the input field
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(submitUserInput);
         gui.add(buttonPanel, BorderLayout.SOUTH);
 
-        gui.setVisible(true);
+        gui.setVisible(true); // For contributors - THIS MUST STAY AT THE END OF THIS PUBLIC STATIC VOID. NO MATTER WHAT.
     }
 }
