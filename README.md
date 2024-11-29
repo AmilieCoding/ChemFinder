@@ -18,10 +18,10 @@ This is a JAVA 21 project, if you are using it you MUST have Java 21 installed, 
 ```
 
 ## Long Term Goals
-:x: Implement a GUI<br>
-:x: Sort data better<br>
 ✔️ Increase readability<br>
 ✔️ Improve error handling<br>
+:x: Implement a GUI<br>
+:x: Sort data better<br>
 <br>
 ## Release 1.0 Patch Notes
 - Added rate limit handling.
