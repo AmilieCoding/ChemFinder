@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -5,12 +6,19 @@ import java.net.URL;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Scanner;
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
         try {
+            userGUI();
             System.out.println("[DEBUG] Successfully started program!");
             String userInput = getInput();
+            if (userInput.equals("placeholder-text")) {
+                System.out.println("[NOTIFICATION] Placeholder Text");
+                System.out.println("[DEBUG] Exiting with code 69");
+                System.exit(23);
+            }else{}
             java.security.Security.setProperty("networkaddress.cache.ttl", "0");
             String compoundNameHalfSanitized = addHyphens(userInput.toLowerCase());
             System.out.println("[DEBUG] Successfully added hyphens and made lower case.");
@@ -88,6 +96,9 @@ public class Main {
                 .get(0).getAsJsonObject().getAsJsonArray("props")
                 .get(0).getAsJsonObject().getAsJsonObject("urn")
                 .get("label").getAsString());
+        System.out.println("[NOTIFICATION] Element: " +
+                jsonObject.getAsJsonArray("PC_Compounds")
+                        .get(0).getAsJsonObject().getAsJsonObject("atoms"));
         System.out.println("[DEBUG] JSON Parsed and Sorted!");
     }
 
@@ -105,5 +116,27 @@ public class Main {
         String userInput = scanner.nextLine();
         scanner.close();
         return userInput;
+    }
+
+    public static void userGUI() {
+        JFrame gui = new JFrame();
+        gui.setSize(600, 500);
+        String appName = "ChemFinder";
+        double versionEdition = 1.5;
+        String stagingEdition = "b";
+        gui.setTitle(appName + " " + stagingEdition + versionEdition);
+        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gui.setLayout(new BorderLayout());
+
+        JLabel title = new JLabel("ChemFinder - Enter what you need.", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.PLAIN, 18));
+        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        gui.add(title, BorderLayout.NORTH);
+
+        JTextField userInputField = new JTextField(20);
+        userInputField.setPreferredSize(new Dimension(200, 30));
+        gui.add(userInputField);
+
+        gui.setVisible(true); // Always keep this at the end of this part of code please!
     }
 }
