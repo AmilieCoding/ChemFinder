@@ -133,10 +133,31 @@ public class Main {
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         gui.add(title, BorderLayout.NORTH);
 
-        JTextField userInputField = new JTextField(20);
-        userInputField.setPreferredSize(new Dimension(200, 30));
-        gui.add(userInputField);
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JTextField userInputField = new JTextField(20);  
+        userInputField.setPreferredSize(new Dimension(200, 30)); 
+        inputPanel.add(userInputField);
 
-        gui.setVisible(true); // Always keep this at the end of this part of code please!
+        gui.add(inputPanel, BorderLayout.CENTER);
+
+        // Set up a submit button and add action listener
+        JButton submitUserInput = new JButton("Search");
+        submitUserInput.addActionListener(e -> {
+            String userInput = userInputField.getText();
+            if (userInput != null && !userInput.trim().isEmpty()) {
+                System.out.println("[DEBUG] " + userInput);
+            } else {
+                System.out.println("[ERROR] User input is empty.");
+            }
+        });
+
+        // Add the button below the input field
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(submitUserInput);
+        gui.add(buttonPanel, BorderLayout.SOUTH);
+
+        gui.setVisible(true);
     }
 }
