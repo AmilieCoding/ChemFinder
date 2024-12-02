@@ -34,20 +34,16 @@ public class Main {
     public static String processResponse(String response) {
         System.out.println("[DEBUG] Parsing and sorting JSON.");
 
-        // Parse the response into a JsonObject
         JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
 
-        // Check if the PC_Compounds array exists and is not empty
         if (jsonObject.has("PC_Compounds") && jsonObject.getAsJsonArray("PC_Compounds").size() > 0) {
-            // Extract the first compound from the array
             JsonObject firstCompound = jsonObject.getAsJsonArray("PC_Compounds").get(0).getAsJsonObject();
 
-            // Access the nested "id" -> "id" -> "cid" to get the CID
             if (firstCompound.has("id") && firstCompound.getAsJsonObject("id").has("id")) {
                 JsonObject idObject = firstCompound.getAsJsonObject("id").getAsJsonObject("id");
                 if (idObject.has("cid")) {
-                    int cid = idObject.get("cid").getAsInt();  // Get the CID value
-                    return "CID: " + cid;  // Return the CID as a string
+                    int cid = idObject.get("cid").getAsInt();
+                    return "CID: " + cid;
                 } else {
                     return "CID not found in 'id' object.";
                 }
@@ -74,7 +70,6 @@ public class Main {
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         gui.add(title, BorderLayout.NORTH);
 
-        // Panel for user input and search button
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -85,9 +80,8 @@ public class Main {
         JButton submitUserInput = new JButton("Search");
         inputPanel.add(submitUserInput);
 
-        gui.add(inputPanel, BorderLayout.CENTER); // Add the panel to the center
+        gui.add(inputPanel, BorderLayout.CENTER);
 
-        // Persistent result label
         JLabel resultLabel = new JLabel("", SwingConstants.CENTER);
         resultLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         gui.add(resultLabel, BorderLayout.SOUTH);
@@ -100,12 +94,10 @@ public class Main {
                     return;
                 }
 
-                // Sanitize input
                 String compoundName = userInput.toLowerCase().replaceAll("[^a-zA-Z0-9]", "");
                 String urlString = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + compoundName + "/JSON";
                 System.out.println("[DEBUG] Sending out request: " + urlString);
 
-                // HTTP Request
                 URL url = new URL(urlString);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
@@ -114,9 +106,9 @@ public class Main {
 
                 int responseCode = conn.getResponseCode();
                 if (responseCode == 200) {
-                    String jsonResponse = readResponse(conn); // Fetch response
-                    String result = processResponse(jsonResponse); // Process JSON
-                    resultLabel.setText(result); // Update result in GUI
+                    String jsonResponse = readResponse(conn);
+                    String result = processResponse(jsonResponse);
+                    resultLabel.setText(result);
                     System.out.println("[DEBUG] Result: " + result);
                 } else {
                     resultLabel.setText("Error: Received HTTP code " + responseCode);
@@ -130,6 +122,6 @@ public class Main {
             }
         });
 
-        gui.setVisible(true); // Show the GUI
+        gui.setVisible(true);
     }
 }
