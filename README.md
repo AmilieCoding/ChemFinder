@@ -23,9 +23,8 @@ This is a JAVA 21 project, if you are using it you MUST have Java 21 installed, 
 :x: Implement a GUI<br>
 :x: Sort data better<br>
 <br>
-## Release 1.0 Patch Notes
-- Added rate limit handling.
-- Increased debug message prevalence.
+## Release 1.1 Patch Notes
+- Added a functional GUI. Please use an older version of the software for CLI based interfacing.
 - If you run into issues, please contact me in discord.gg/arch-linux
 
 
