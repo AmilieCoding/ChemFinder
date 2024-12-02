@@ -59,8 +59,8 @@ public class Main {
         JFrame gui = new JFrame();
         gui.setSize(600, 500);
         String appName = "ChemFinder";
-        double versionEdition = 1.5;
-        String stagingEdition = "b";
+        double versionEdition = 1.1;
+        String stagingEdition = "v";
         gui.setTitle(appName + " " + stagingEdition + versionEdition);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.setLayout(new BorderLayout());
