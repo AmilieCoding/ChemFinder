@@ -22,11 +22,5 @@ This is a JAVA 8 project, if you are using it you MUST have JAVA 8 or later inst
 ## Long Term Goals
 ✔️ Increase readability<br>
 ✔️ Improve error handling<br>
-✔️ Implement a GUI<br>
-:x: Sort data better<br>
-<br>
-## Release b1.6 Patch Notes
-- This prerelease adds a fully functional GUI to ChemFinder. Please give me feedback on stuff you would like adding to the informational section.
-- If you run into issues, please contact me in discord.gg/arch-linux
 
 
