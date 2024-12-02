@@ -3,77 +3,21 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.util.Scanner;
+
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            userGUI();
+            UserGUI();
             System.out.println("[DEBUG] Successfully started program!");
-            String userInput = getInput();
-            if (userInput.equals("placeholder-text")) {
-                System.out.println("[NOTIFICATION] Placeholder Text");
-                System.out.println("[DEBUG] Exiting with code 69");
-                System.exit(23);
-            }else{}
-            java.security.Security.setProperty("networkaddress.cache.ttl", "0");
-            String compoundNameHalfSanitized = addHyphens(userInput.toLowerCase());
-            System.out.println("[DEBUG] Successfully added hyphens and made lower case.");
-            String compoundName = removeSpecialCharacters(compoundNameHalfSanitized);
-            System.out.println("[DEBUG] Removed special characters.");
-            String urlString = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + compoundName + "/JSON";
-            handleRequest(urlString);
         } catch (Exception e) {
             System.err.println("[ERROR] An exception occurred: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public static void handleRequest(String urlString) throws Exception {
-        System.out.println("[DEBUG] Sending out request.");
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
-        conn.setRequestMethod("GET");
-        int responseCode = conn.getResponseCode();
-        if (responseCode == 200) {
-            System.out.println("[DEBUG] HTTP CODE 200! JSON Found! Continuing with analysis!");
-            String response = readResponse(conn);
-            processResponse(response);
-        } else if (responseCode == 429 || responseCode == 503) {
-            System.out.println("[ERROR] HTTP ERROR CODE: " + responseCode);
-            System.out.println("[ERROR] You have been rate-limited!");
-            int maxRetries = 3;
-            for (int retryCount = 0; retryCount < maxRetries; retryCount++) {
-                System.out.println("[NOTIFICATION] Retrying in 15 seconds...");
-                try {
-                    Thread.sleep(15000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    System.err.println("[ERROR] Retry interrupted.");
-                    break;
-                }
-                System.out.println("[NOTIFICATION] Attempting retry " + (retryCount + 1) + " of " + maxRetries + "...");
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                responseCode = conn.getResponseCode();
-                if (responseCode == 200) {
-                    System.out.println("[NOTIFICATION] Request succeeded on retry " + (retryCount + 1) + ".");
-                    String response = readResponse(conn);
-                    processResponse(response);
-                    break;
-                } else if (retryCount == maxRetries - 1) {
-                    System.err.println("[ERROR] Max retries reached. Exiting.");
-                }
-            }
-        } else {
-            System.out.println("[ERROR] HTTP ERROR CODE: " + responseCode);
-            System.out.println("[ERROR] Are you sure you spelt it correctly?");
-        }
-        conn.disconnect();
     }
 
     public static String readResponse(HttpURLConnection conn) throws Exception {
@@ -87,38 +31,35 @@ public class Main {
         return response.toString();
     }
 
-    public static void processResponse(String response) {
+    public static String processResponse(String response) {
         System.out.println("[DEBUG] Parsing and sorting JSON.");
+
+        // Parse the response into a JsonObject
         JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
-        System.out.println("[NOTIFICATION] CID: " + jsonObject.getAsJsonArray("PC_Compounds")
-                .get(0).getAsJsonObject().get("id"));
-        System.out.println("[NOTIFICATION] Label: " + jsonObject.getAsJsonArray("PC_Compounds")
-                .get(0).getAsJsonObject().getAsJsonArray("props")
-                .get(0).getAsJsonObject().getAsJsonObject("urn")
-                .get("label").getAsString());
-        System.out.println("[NOTIFICATION] Element: " +
-                jsonObject.getAsJsonArray("PC_Compounds")
-                        .get(0).getAsJsonObject().getAsJsonObject("atoms"));
-        System.out.println("[DEBUG] JSON Parsed and Sorted!");
+
+        // Check if the PC_Compounds array exists and is not empty
+        if (jsonObject.has("PC_Compounds") && jsonObject.getAsJsonArray("PC_Compounds").size() > 0) {
+            // Extract the first compound from the array
+            JsonObject firstCompound = jsonObject.getAsJsonArray("PC_Compounds").get(0).getAsJsonObject();
+
+            // Access the nested "id" -> "id" -> "cid" to get the CID
+            if (firstCompound.has("id") && firstCompound.getAsJsonObject("id").has("id")) {
+                JsonObject idObject = firstCompound.getAsJsonObject("id").getAsJsonObject("id");
+                if (idObject.has("cid")) {
+                    int cid = idObject.get("cid").getAsInt();  // Get the CID value
+                    return "CID: " + cid;  // Return the CID as a string
+                } else {
+                    return "CID not found in 'id' object.";
+                }
+            } else {
+                return "'id' or nested 'id' object not found.";
+            }
+        } else {
+            return "No compounds found in the response.";
+        }
     }
 
-    public static String addHyphens(String text) {
-        return text.replaceAll("\\s+", "-");
-    }
-
-    public static String removeSpecialCharacters(String input) {
-        return input.replaceAll("[^a-zA-Z0-9\\s]", "");
-    }
-
-    static String getInput() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("[NOTIFICATION] Enter your query: ");
-        String userInput = scanner.nextLine();
-        scanner.close();
-        return userInput;
-    }
-
-    public static void userGUI() {
+    public static void UserGUI() {
         JFrame gui = new JFrame();
         gui.setSize(600, 500);
         String appName = "ChemFinder";
@@ -133,28 +74,62 @@ public class Main {
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         gui.add(title, BorderLayout.NORTH);
 
+        // Panel for user input and search button
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JTextField userInputField = new JTextField(20);
         userInputField.setPreferredSize(new Dimension(200, 30));
         inputPanel.add(userInputField);
-        gui.add(inputPanel, BorderLayout.CENTER);
 
         JButton submitUserInput = new JButton("Search");
+        inputPanel.add(submitUserInput);
+
+        gui.add(inputPanel, BorderLayout.CENTER); // Add the panel to the center
+
+        // Persistent result label
+        JLabel resultLabel = new JLabel("", SwingConstants.CENTER);
+        resultLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        gui.add(resultLabel, BorderLayout.SOUTH);
+
         submitUserInput.addActionListener(e -> {
-            String userInput = userInputField.getText();
-            if (userInput != null && !userInput.trim().isEmpty()) {
-                System.out.println("[DEBUG] " + userInput);
-            } else {
-                System.out.println("[ERROR] User input is empty.");
+            try {
+                String userInput = userInputField.getText().trim();
+                if (userInput.isEmpty()) {
+                    JOptionPane.showMessageDialog(gui, "Please enter a compound name.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Sanitize input
+                String compoundName = userInput.toLowerCase().replaceAll("[^a-zA-Z0-9]", "");
+                String urlString = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + compoundName + "/JSON";
+                System.out.println("[DEBUG] Sending out request: " + urlString);
+
+                // HTTP Request
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(10000);
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200) {
+                    String jsonResponse = readResponse(conn); // Fetch response
+                    String result = processResponse(jsonResponse); // Process JSON
+                    resultLabel.setText(result); // Update result in GUI
+                    System.out.println("[DEBUG] Result: " + result);
+                } else {
+                    resultLabel.setText("Error: Received HTTP code " + responseCode);
+                    System.err.println("[ERROR] HTTP ERROR CODE: " + responseCode);
+                }
+                conn.disconnect();
+            } catch (Exception ex) {
+                System.err.println("[ERROR] An error occurred: " + ex.getMessage());
+                ex.printStackTrace();
+                resultLabel.setText("Error: Could not fetch data.");
             }
         });
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(submitUserInput);
-        gui.add(buttonPanel, BorderLayout.SOUTH);
-
-        gui.setVisible(true); // For contributors - THIS MUST STAY AT THE END OF THIS PUBLIC STATIC VOID. NO MATTER WHAT.
+        gui.setVisible(true); // Show the GUI
     }
 }
