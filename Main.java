@@ -3,21 +3,63 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+import java.util.HashMap;
+import java.util.Map;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import javax.swing.*;
+import java.io.*;
 
 public class Main {
+    private static Map<String, Map<String, String>> translations = new HashMap<>();
+    private static String currentLanguage = "en";
+
+    public static int startupErrCode() {
+        return 1;
+    }
+
     public static void main(String[] args) {
         try {
+            initializeTranslations();
             UserGUI();
-            System.out.println("[DEBUG] Successfully started program!");
+            //throw new RuntimeException("Intentional Exception - Debugging Purposes.");
         } catch (Exception e) {
-            System.err.println("[ERROR] An exception occurred: " + e.getMessage());
-            e.printStackTrace();
+            try {
+                FileWriter fileWriter = new FileWriter("error_log.txt", true);
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+                e.printStackTrace(printWriter);
+                printWriter.println("[ERROR] Occurred at: " + System.currentTimeMillis());
+                printWriter.close();
+                System.out.println("[WARNING] Error logged to error_log.txt");
+            } catch (IOException ex) {
+                System.err.println("[ERROR] Failed to write to log file! " + ex.getMessage());
+            }
+            int errCode = startupErrCode();
+            fatalError(errCode);
         }
+    }
+
+    public static void initializeTranslations() {
+        Map<String, String> en = new HashMap<>();
+        en.put("title", "ChemFinder - Enter what you need.");
+        en.put("search", "Search");
+        en.put("input_error", "Please enter a compound name.");
+        en.put("error", "Error: Could not fetch data.");
+        en.put("language", "Language: ");
+
+        Map<String, String> nl = new HashMap<>();
+        nl.put("title", "ChemFinder - Voer in wat u nodig heeft.");
+        nl.put("search", "Zoeken");
+        nl.put("input_error", "Voer een verbindingnaam in.");
+        nl.put("error", "Fout: Kan gegevens niet ophalen.");
+        nl.put("language", "Taal: ");
+
+        translations.put("en", en);
+        translations.put("nl", nl);
+    }
+
+    public static String translate(String key) {
+        return translations.getOrDefault(currentLanguage, translations.get("en")).getOrDefault(key, key);
     }
 
     public static String readResponse(HttpURLConnection conn) throws Exception {
@@ -33,7 +75,6 @@ public class Main {
 
     public static String processResponse(String response) {
         System.out.println("[DEBUG] Parsing and sorting JSON.");
-
         JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
 
         if (jsonObject.has("PC_Compounds") && jsonObject.getAsJsonArray("PC_Compounds").size() > 0) {
@@ -56,41 +97,63 @@ public class Main {
     }
 
     public static void UserGUI() {
-        JFrame gui = new JFrame();
-        gui.setSize(600, 500);
+        JFrame gui = new JFrame("ChemFinder");
+        gui.setSize(800, 600);
         String appName = "ChemFinder";
-        double versionEdition = 1.1;
-        String stagingEdition = "v";
+        double versionEdition = 1.7;
+        String stagingEdition = "b";
         gui.setTitle(appName + " " + stagingEdition + versionEdition);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gui.setLayout(new BorderLayout());
+        gui.setLayout(new BorderLayout(10, 10));
 
-        JLabel title = new JLabel("ChemFinder - Enter what you need.", SwingConstants.CENTER);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout(20, 20));
+        gui.add(mainPanel, BorderLayout.CENTER);
+
+        JPanel headerPanel = new JPanel();
+        JLabel title = new JLabel(translate("title"), SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.PLAIN, 18));
-        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-        gui.add(title, BorderLayout.NORTH);
+        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        headerPanel.add(title);
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
+        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JTextField userInputField = new JTextField(20);
         userInputField.setPreferredSize(new Dimension(200, 30));
         inputPanel.add(userInputField);
 
-        JButton submitUserInput = new JButton("Search");
+        JButton submitUserInput = new JButton(translate("search"));
         inputPanel.add(submitUserInput);
+        mainPanel.add(inputPanel, BorderLayout.CENTER);
 
-        gui.add(inputPanel, BorderLayout.CENTER);
+        JPanel languagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JComboBox<String> languageSelector = new JComboBox<>(new String[]{"English", "Nederlands"});
+        languagePanel.add(new JLabel(translate("language")));
+        languagePanel.add(languageSelector);
+        languagePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        mainPanel.add(languagePanel, BorderLayout.SOUTH);
 
         JLabel resultLabel = new JLabel("", SwingConstants.CENTER);
         resultLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         gui.add(resultLabel, BorderLayout.SOUTH);
 
+        languageSelector.addActionListener(e -> {
+            String selectedLanguage = (String) languageSelector.getSelectedItem();
+            if ("English".equals(selectedLanguage)) {
+                currentLanguage = "en";
+            } else if ("Nederlands".equals(selectedLanguage)) {
+                currentLanguage = "nl";
+            }
+            title.setText(translate("title"));
+            submitUserInput.setText(translate("search"));
+            ((JLabel) languagePanel.getComponent(0)).setText(translate("language"));
+        });
+
         submitUserInput.addActionListener(e -> {
             try {
                 String userInput = userInputField.getText().trim();
                 if (userInput.isEmpty()) {
-                    JOptionPane.showMessageDialog(gui, "Please enter a compound name.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(gui, translate("input_error"), "Input Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -111,17 +174,34 @@ public class Main {
                     resultLabel.setText(result);
                     System.out.println("[DEBUG] Result: " + result);
                 } else {
-                    resultLabel.setText("Error: Received HTTP code " + responseCode);
+                    resultLabel.setText(translate("error") + " HTTP code " + responseCode);
                     System.err.println("[ERROR] HTTP ERROR CODE: " + responseCode);
                 }
                 conn.disconnect();
             } catch (Exception ex) {
                 System.err.println("[ERROR] An error occurred: " + ex.getMessage());
                 ex.printStackTrace();
-                resultLabel.setText("Error: Could not fetch data.");
+                resultLabel.setText(translate("error"));
             }
         });
 
         gui.setVisible(true);
+    }
+
+    public static void fatalError(int errCode) {
+        JFrame errGUI = new JFrame("ChemFinder - ERROR!");
+        errGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        errGUI.setSize(500,500);
+        errGUI.setLayout(null);
+        JLabel errorLabel = new JLabel("[FATAL ERROR] Program Crashed! Error Code: " + errCode, SwingConstants.CENTER);
+        int frameWidth = 500;
+        int frameHeight = 500;
+        int labelWidth = 400;
+        int labelHeight = 30;
+        int x = (frameWidth - labelWidth) / 2;
+        int y = (frameHeight - labelHeight) / 2;
+        errorLabel.setBounds(x, y, labelWidth, labelHeight);
+        errGUI.add(errorLabel);
+        errGUI.setVisible(true);
     }
 }
