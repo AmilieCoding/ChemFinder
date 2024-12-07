@@ -5,7 +5,8 @@ This is a JAVA 23 project, if you are using it you MUST have Java 23 installed, 
 
 ## Using main.class from source
 - Open IntelliJ and create a new MAVEN PROJECT.<br>
-- Paste the folder structure "gay.amilie" into your project.
+- Paste the folder structure "gay.amilie" into your project.<br>
+- Add the META-INF folder into the root of your project.<br>
 - Update your pom.xml with the pom.xml in this repository.<br>
 
 
