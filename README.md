@@ -9,13 +9,12 @@ This is a JAVA 23 project, if you are using it you MUST have Java 23 installed, 
 - Add the META-INF folder into the root of your project.<br>
 - Update your pom.xml with the pom.xml in this repository.<br>
 
-
 ## Long Term Goals
 ✔️ Increase readability<br>
 ✔️ Improve error handling<br>
 ✔️ Implement a GUI<br>
 ✔️ Sort data better<br>
-<br>
+
 ## Release v1.1.1 Patch Notes
 - Redesigned the GUI.
 - Dark mode.
