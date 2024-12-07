@@ -6,6 +6,32 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class GUI {
+
+    enum nya {
+        OK(200),
+        NOT_FOUND(404),
+        FORBIDDEN(403);
+
+        private final int code;
+
+        nya(int code) {
+            this.code = code;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public static nya fromCode(int code) {
+            for (nya status : values()) {
+                if (status.getCode() == code) {
+                    return status;
+                }
+            }
+            return null;
+        }
+    }
+
     public static void UserGUI() {
         try {
             if (System.getProperty("os.name").toLowerCase().contains("mac")) {
@@ -18,7 +44,7 @@ public class GUI {
 
         JFrame gui = new JFrame("ChemFinder");
         gui.setSize(800, 600);
-        gui.setTitle("ChemFinder v1.7b");
+        gui.setTitle("ChemFinder b2.1");
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.setLayout(new BorderLayout(10, 10));
 
@@ -63,17 +89,16 @@ public class GUI {
         resultPanel.setLayout(new BorderLayout(10, 10));
         resultPanel.setBackground(backgroundColor);
 
-        JLabel resultLabel = new JLabel("", SwingConstants.CENTER); // Center alignment
+        JLabel resultLabel = new JLabel("", SwingConstants.CENTER);
         resultLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         resultLabel.setForeground(new Color(241, 245, 248));
         resultLabel.setBackground(backgroundColor);
         resultLabel.setOpaque(true);
 
         resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        resultLabel.setVerticalAlignment(SwingConstants.TOP); // Aligns text to the top of the label (to keep all content in view)
-
-        resultLabel.setPreferredSize(new Dimension(700, 200)); // Set preferred size for the result label
-        resultLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Adds some padding around the text
+        resultLabel.setVerticalAlignment(SwingConstants.TOP);
+        resultLabel.setPreferredSize(new Dimension(700, 200));
+        resultLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JScrollPane scrollPane = new JScrollPane(resultLabel);
         scrollPane.setPreferredSize(new Dimension(700, 200));
@@ -85,7 +110,7 @@ public class GUI {
             try {
                 String userInput = userInputField.getText().trim();
                 if (userInput.isEmpty()) {
-                    JOptionPane.showMessageDialog(gui, "Input Error", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(gui, "Input cannot be empty!", "Input Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -99,16 +124,28 @@ public class GUI {
 
                 int responseCode = conn.getResponseCode();
                 resultLabel.setText("");
-                if (responseCode == 200) {
-                    String jsonResponse = APIRequests.readResponse(conn);
-                    String result = APIRequests.processResponse(jsonResponse);
-                    resultLabel.setText("<html><pre>" + result + "</pre></html>");
-                } else {
-                    resultLabel.setText("Error HTTP code " + responseCode);
+
+                nya status = nya.fromCode(responseCode);
+                switch (status) {
+                    case OK:
+                        String jsonResponse = APIRequests.readResponse(conn);
+                        String result = APIRequests.processResponse(jsonResponse);
+                        resultLabel.setText("<html><pre>" + result + "</pre></html>");
+                        break;
+                    case NOT_FOUND:
+                        resultLabel.setText("Error: Not Found (404)");
+                        break;
+                    case FORBIDDEN:
+                        resultLabel.setText("Error: Forbidden (403)");
+                        break;
+                    default:
+                        resultLabel.setText("Unknown error: HTTP code " + responseCode);
+                        break;
                 }
                 conn.disconnect();
             } catch (Exception ex) {
-                resultLabel.setText("Error");
+                resultLabel.setText("Error: " + ex.getMessage());
+                ex.printStackTrace();
             }
         });
 
