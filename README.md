@@ -15,7 +15,7 @@ This is a JAVA 23 project, if you are using it you MUST have Java 23 installed, 
 ✔️ Implement a GUI<br>
 ✔️ Sort data better<br>
 
-## Release v1.1.1 Patch Notes
+## Release v2.0 Patch Notes
 - Redesigned the GUI.
 - Dark mode.
 - Bug Fixes.
