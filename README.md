@@ -1,33 +1,28 @@
 # PubChem ChemFinder
-WARNING. THIS IS THE BETA BRANCH. THIS MAY BE UNSTABLE. PLEASE RETURN TO THE MAIN BRANCH IF YOU WISH TO USE THIS SOFTWARE FOR ANYTHING OTHER THAN TESTING.<br>
-<br>
 This tool identifies against the PubChem Database in order to check for properties of chemicals.<br>
 <br>
-This is a JAVA 8 project, if you are using it you MUST have Java 8 installed, if you are manually using the code from main.java you MUST be using JAVA8. Java23 may work but it is untested.<br>
+This is a JAVA 23 project, if you are using it you MUST have Java 23 installed, if you are manually using the code from main.java you MUST be using JAVA23.
 
 ## Using main.class from source
 - Open IntelliJ and create a new MAVEN PROJECT.<br>
-- Copy the code from main.java into your main.java of your project.<br>
-- In your pom.xml add the following<br>
-```    
-    <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-    </dependencies>
-```
+- Paste the folder structure "gay.amilie" into your project.
+- Update your pom.xml with the pom.xml in this repository.<br>
+
 
 ## Long Term Goals
 ✔️ Increase readability<br>
 ✔️ Improve error handling<br>
 ✔️ Implement a GUI<br>
-:x: Sort data better<br>
+✔️ Sort data better<br>
 <br>
 ## Release v1.1.1 Patch Notes
-- Added a functional GUI. Please use an older version of the software for CLI based interfacing.
-- Hotfixed GUI Title.
+- Redesigned the GUI.
+- Dark mode.
+- Bug Fixes.
+- Sorts more data.
+- Ease of use.
+- Incremented to major version 2.0
+- Full code rewrite.
 - If you run into issues, please contact me in discord.gg/arch-linux
 
 
