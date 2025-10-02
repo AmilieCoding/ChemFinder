@@ -18,7 +18,7 @@ public class GUI {
 
         JFrame gui = new JFrame("ChemFinder");
         gui.setSize(800, 600);
-        gui.setTitle("ChemFinder v1.7b");
+        gui.setTitle("ChemFinder - PubChem Crawler");
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.setLayout(new BorderLayout(10, 10));
 
@@ -103,6 +103,9 @@ public class GUI {
                     String jsonResponse = APIRequests.readResponse(conn);
                     String result = APIRequests.processResponse(jsonResponse);
                     resultLabel.setText("<html><pre>" + result + "</pre></html>");
+                } else if (responseCode == 404) {
+                    resultLabel.setText("Chemical not found in database. Did you mean to type something else?");
+
                 } else {
                     resultLabel.setText("Error HTTP code " + responseCode);
                 }
